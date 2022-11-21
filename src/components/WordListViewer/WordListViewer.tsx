@@ -6,6 +6,7 @@ interface Props {
 	wordList: string[]
     currWordIndex: number
     errorIndexSet: Set<number>
+    userInput: string
 }
 
 export default function WordListViewer(props: Props) {
@@ -14,6 +15,7 @@ export default function WordListViewer(props: Props) {
             {props.wordList.map((word: string, i: number) =>
                 <Word key={word} 
                     wordKey={word} 
+                    userInput={props.userInput}
                     isError={i < props.currWordIndex && props.errorIndexSet.has(i)}
                     isCorrect={i < props.currWordIndex && !props.errorIndexSet.has(i)}
                     isHighlight={i === props.currWordIndex} />)}

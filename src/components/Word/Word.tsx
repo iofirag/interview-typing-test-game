@@ -6,6 +6,7 @@ interface Props {
     isHighlight: boolean
     isError: boolean
     isCorrect: boolean
+    userInput: string
 }
 
 export default function Word(props: Props) {
@@ -16,11 +17,28 @@ export default function Word(props: Props) {
     }, [props]);
 
     return (
-        <div ref={myRef} className={`${classes.wrapper} 
-            ${props.isCorrect ? classes.correct : ''} 
-            ${props.isError ? classes.error : ''} 
-            ${props.isHighlight && classes.highlight}`}>
-            {props.wordKey}
+        <div>
+            {props.isHighlight ?
+                <div ref={myRef} className={`${classes.wrapper} ${classes.highlight}`}>
+                    {
+                        props.wordKey.split('').map((ch, i) => {
+                            if (props.userInput.length > i) {
+                                // error / correct char
+                                return <span className={props.wordKey[i] === props.userInput[i] ? classes.correct : classes.error} key={i}>{ch}</span>
+                            } else {
+                                // normal char
+                                return <span key={i}>{ch}</span>
+                            }
+                        })
+                    }
+                </div>
+                :
+                <div ref={myRef} className={`${classes.wrapper}
+                    ${props.isCorrect ? classes.correct : ''} 
+                    ${props.isError ? classes.error : ''} `}>
+                    {props.wordKey}
+                </div>
+            }
         </div>
     )
 }

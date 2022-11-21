@@ -70,7 +70,7 @@ function App() {
             <h1>Typing Speed Test</h1>
             <main>
                 <Statistics resetGame={resetGame} correctCpm={correctChars} correctWpm={errorIndexSet.size} timeLeft={secondLeft} lastSeconds={config.lastSeconds} />
-                <WordListViewer errorIndexSet={errorIndexSet} wordList={WORD_LIST} currWordIndex={currWordIndex} />
+                <WordListViewer errorIndexSet={errorIndexSet} wordList={WORD_LIST} currWordIndex={currWordIndex} userInput={inputStr} />
                 <InputField handleKeyEvent={setInputStr} value={inputStr} disabled={!inputAvailable} />
             </main>
             <footer>Developed By Ofir Aghai</footer>
