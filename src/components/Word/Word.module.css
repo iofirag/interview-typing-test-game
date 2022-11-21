@@ -1,0 +1,18 @@
+.wrapper {
+    font-size: 160%;
+    margin: 5px;
+    height: 30px;
+    font-family: sans-serif;
+}
+
+.highlight {
+    background-color: rgba(228, 228, 138, 0.644)
+}
+
+.error {
+    color: red
+}
+
+.correct {
+    color: green;
+}

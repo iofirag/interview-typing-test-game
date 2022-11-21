@@ -1,0 +1,14 @@
+.App {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.centered {
+    justify-content: center;
+    align-items: center;
+}
+
+main {
+    width: 40%;
+    margin: 0 auto;
+}

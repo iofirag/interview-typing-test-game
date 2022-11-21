@@ -1,0 +1,14 @@
+.wrapper {
+    height: 35px;
+    display: flex;
+    line-height: 2;
+    background-color: yellow;
+}
+
+.lastSeconds {
+    color: red;
+    font-weight: 700;
+}
+.item {
+    flex: 1 1 0px;
+}

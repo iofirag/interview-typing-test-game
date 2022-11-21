@@ -1,0 +1,8 @@
+.wrapper {
+    background-color: black;
+}
+
+.wrapper input {
+    width: 40%;
+    height: 35px;
+}
