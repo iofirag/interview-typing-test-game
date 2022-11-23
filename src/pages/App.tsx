@@ -13,7 +13,7 @@ function App() {
     const [correctChars, setCorrectChars] = React.useState<number>(0)
     const [inputStr, setInputStr] = React.useState<string>('')
     const [intervalId, setIntervalId] = React.useState<number>(0)
-    const [remaningTimeMilis, setRemaningTimeMilis] = React.useState<number>(config.testSeconds * 1000)
+    const [remaningTimeMilis, setRemaningTimeMilis] = React.useState<number>(config.gameSeconds * 1000)
     const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false)
     const [inputAvailable, setInputAvailable] = React.useState<boolean>(true)
 
@@ -24,18 +24,18 @@ function App() {
         setCorrectChars(0)
         setInputStr('')
         setIntervalId(0)
-        setRemaningTimeMilis(config.testSeconds * 1000)
+        setRemaningTimeMilis(config.gameSeconds * 1000)
         setIsModalOpen(false)
         setInputAvailable(true)
     }, [intervalId])
 
     const handleSecondCount = React.useCallback(() => {
         const d = new Date(Date.now())
-        d.setSeconds(d.getSeconds() + config.testSeconds)
+        d.setSeconds(d.getSeconds() + config.gameSeconds)
         const id: NodeJS.Timeout = setInterval(() => {
             const deltaMilis = d.getTime() - Date.now()
             setRemaningTimeMilis(deltaMilis > 0 ? deltaMilis : 0)
-        }, 100)
+        }, config.intervalMilis)
         setIntervalId(+id)
     }, [])
 
