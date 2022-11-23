@@ -72,11 +72,15 @@ function App() {
         <div className="App centered">
             <h1>Typing Speed Test</h1>
             <main>
-                <Statistics resetGame={resetGame} correctCpm={correctChars} correctWpm={errorIndexSet.size}
-                    timeLeft={remaningTimeMilis / 1000 > 5 ? Math.round(remaningTimeMilis / 1000) : +(remaningTimeMilis / 1000).toFixed(1)}
+                <Statistics resetGame={resetGame} 
+                    correctCpm={correctChars} 
+                    correctWpm={errorIndexSet.size}
+                    timeLeft={remaningTimeMilis / 1000}
                     lastSeconds={config.lastSeconds} />
-                <WordListViewer errorIndexSet={errorIndexSet} wordList={WORD_LIST}
-                    currWordIndex={currWordIndex} userInput={inputStr} />
+                <WordListViewer errorIndexSet={errorIndexSet} 
+                    wordList={WORD_LIST}
+                    currWordIndex={currWordIndex} 
+                    userInput={inputStr} />
                 <InputField handleKeyEvent={setInputStr} value={inputStr} disabled={!inputAvailable} />
             </main>
             <footer>Developed By Ofir Aghai</footer>
