@@ -1,4 +1,5 @@
 {
-    "testSeconds": 60,
-    "lastSeconds": 5
+    "gameSeconds": 60,
+    "lastSeconds": 5,
+    "intervalMilis": 100
 }

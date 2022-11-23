@@ -14,7 +14,9 @@ export default function Statistics(props: Props) {
         <div className={classes.wrapper}>
             <div className={classes.item}>Correct CPM: {props.correctCpm}</div>
             <div className={classes.item}>Correct WPM: {props.correctWpm}</div>
-            <div className={`${classes.item} ${props.timeLeft < props.lastSeconds && classes.lastSeconds}`}>Time left: {String(props.timeLeft)}</div>
+            <div className={`${classes.item} ${props.timeLeft < props.lastSeconds && classes.lastSeconds}`}>
+                Time left: {props.timeLeft > props.lastSeconds ? Math.round(props.timeLeft) : props.timeLeft.toFixed(1)}
+            </div>
             <input className={classes.item} type="button" value="Restart" onClick={props.resetGame} />
         </div>
     );
