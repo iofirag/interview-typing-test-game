@@ -5,18 +5,14 @@ import './MyPopup.css'
 
 interface Props {
     isOpen: boolean;
-    errorWords: number;
-    correctChars: number;
-    children?: any;
     onClose: () => void;
+    children?: any;
 }
 
-export default function MyPopup(props: Props) {
+export default function MyPopup (props: Props) {
     return (
         <Popup onClose={props.onClose} open={props.isOpen} position="center center">
-            <div>Time is up..</div>
-            <div>Correct chars: {props.correctChars}</div>
-            <div>Error words: {props.errorWords}</div>
+            {props.children}
         </Popup>
     )
 }

@@ -1,19 +1,19 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { GlobalContext } from '../../store/GlobalContext';
 import classes from './InputField.module.css'
 
 
 interface Props { 
-    value: string
-    handleKeyEvent: (event: any) => void
-    disabled: boolean
 }
 
 export default function InputField(props: Props) {
+    const {inputStr, isInputAvailable, setInputStr} = useContext(GlobalContext);
+
     return (
         <div className={classes.wrapper}>
-            <input disabled={props.disabled}
-                onChange={(e)=> props.handleKeyEvent(e.target.value)} 
-                value={props.value} type="text" placeholder="type the word here" />
+            <input disabled={!isInputAvailable}
+                onChange={(e)=> setInputStr(e.target.value)}
+                value={inputStr} type="text" placeholder="type the word here" />
         </div>
     )
 }
