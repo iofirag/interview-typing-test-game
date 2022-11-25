@@ -5,17 +5,21 @@ import WordListViewer from '../components/WordListViewer/WordListViewer';
 import WORD_LIST from '../data/wordList.json'
 import config from '../data/config.json'
 import MyPopup from '../components/Popup/MyPopup';
+import { useDispatch, useSelector } from 'react-redux';
+import { uiActions } from '../store/ui-slice'
 import './App.css';
 
 function App() {
+    const dispatch = useDispatch();
+    const isModalOpen = useSelector((state: any) => state.ui.isModalOpen);
+    const isInputAvailable = useSelector((state: any) => state.ui.isInputAvailable);
+
     const [errorIndexSet, setErrorIndexSet] = React.useState<Set<number>>(new Set())
     const [currWordIndex, setCurrWordIndex] = React.useState<number>(0)
     const [correctChars, setCorrectChars] = React.useState<number>(0)
     const [inputStr, setInputStr] = React.useState<string>('')
     const [intervalId, setIntervalId] = React.useState<number>(0)
     const [remaningTimeMilis, setRemaningTimeMilis] = React.useState<number>(config.gameSeconds * 1000)
-    const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false)
-    const [inputAvailable, setInputAvailable] = React.useState<boolean>(true)
 
     const resetGame = React.useCallback(() => {
         clearInterval(intervalId)
@@ -25,9 +29,9 @@ function App() {
         setInputStr('')
         setIntervalId(0)
         setRemaningTimeMilis(config.gameSeconds * 1000)
-        setIsModalOpen(false)
-        setInputAvailable(true)
-    }, [intervalId])
+        dispatch(uiActions.setIsModalOpen(false))
+        dispatch(uiActions.setIsInputAvailable(true))
+    }, [intervalId, dispatch])
 
     const handleSecondCount = React.useCallback(() => {
         const d = new Date(Date.now())
@@ -43,8 +47,8 @@ function App() {
         if (remaningTimeMilis <= 0) {
             // Time is up
             clearInterval(intervalId)
-            setInputAvailable(false)
-            setIsModalOpen(true)
+            dispatch(uiActions.setIsInputAvailable(false))
+            dispatch(uiActions.setIsModalOpen(true))
             return
         }
         if (!intervalId && inputStr) {
@@ -66,22 +70,22 @@ function App() {
             setInputStr('')
             setCurrWordIndex(prev => prev < WORD_LIST.length - 1 ? prev + 1 : 0)
         }
-    }, [inputStr, currWordIndex, intervalId, remaningTimeMilis, handleSecondCount])
+    }, [inputStr, currWordIndex, intervalId, remaningTimeMilis, handleSecondCount, dispatch])
 
     return (
         <div className="App centered">
             <h1>Typing Speed Test</h1>
             <main>
-                <Statistics resetGame={resetGame} 
-                    correctCpm={correctChars} 
+                <Statistics resetGame={resetGame}
+                    correctCpm={correctChars}
                     correctWpm={errorIndexSet.size}
                     timeLeft={remaningTimeMilis / 1000}
                     lastSeconds={config.lastSeconds} />
-                <WordListViewer errorIndexSet={errorIndexSet} 
+                <WordListViewer errorIndexSet={errorIndexSet}
                     wordList={WORD_LIST}
-                    currWordIndex={currWordIndex} 
+                    currWordIndex={currWordIndex}
                     userInput={inputStr} />
-                <InputField handleKeyEvent={setInputStr} value={inputStr} disabled={!inputAvailable} />
+                <InputField handleKeyEvent={setInputStr} value={inputStr} disabled={!isInputAvailable} />
             </main>
             <footer>Developed By Ofir Aghai</footer>
             <MyPopup isOpen={isModalOpen} onClose={resetGame} correctChars={correctChars} errorWords={errorIndexSet.size} />
