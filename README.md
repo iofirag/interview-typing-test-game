@@ -1,4 +1,7 @@
-# example:
+# Example:
+https://doorloop.com/type
+
+# Guide:
 https://docs.google.com/document/d/1XscOwPH_uyTG4VQyWnThR2V8cB4m7wA4NYVNO3xinTs/edit
 
 # Getting Started with Create React App
