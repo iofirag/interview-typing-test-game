@@ -2,8 +2,6 @@ import React from 'react';
 import InputField from '../components/InputField/InputField';
 import Statistics from '../components/Statistics/Statistics';
 import WordListViewer from '../components/WordListViewer/WordListViewer';
-import WORD_LIST from '../data/wordList.json'
-import config from '../data/config.json'
 import MyPopup from '../components/Popup/MyPopup';
 import { useDispatch, useSelector } from 'react-redux';
 import { uiActions } from '../store/ui-slice'
@@ -13,7 +11,7 @@ import './App.css';
 function App() {
     const dispatch = useDispatch();
     const { isModalOpen, isInputAvailable } = useSelector((state: any) => state.uiSlice);
-    const { remaningTimeMilis, intervalId, correctChars, inputStr, currWordIndex, errorIndexSet } = useSelector((state: any) => state.counterSlice);
+    const { remaningTimeMilis, intervalId, correctChars, inputStr, currWordIndex, errorIndexSet, WORD_LIST, config } = useSelector((state: any) => state.counterSlice);
 
     const resetGame = React.useCallback(() => {
         clearInterval(intervalId)
@@ -25,7 +23,7 @@ function App() {
         dispatch(counterActions.setRemaningTimeMilis(config.gameSeconds * 1000))
         dispatch(uiActions.setIsModalOpen(false))
         dispatch(uiActions.setIsInputAvailable(true))
-    }, [intervalId, dispatch])
+    }, [intervalId, dispatch, config.gameSeconds])
 
     const handleSecondCount = React.useCallback(() => {
         const d = new Date(Date.now())
@@ -35,7 +33,7 @@ function App() {
             dispatch(counterActions.setRemaningTimeMilis(deltaMilis > 0 ? deltaMilis : 0))
         }, config.intervalMilis)
         dispatch(counterActions.setIntervalId(id))
-    }, [])
+    }, [dispatch, config])
 
     const handleTimeIsUp = React.useCallback(() => {
         clearInterval(intervalId)
@@ -74,7 +72,7 @@ function App() {
             dispatch(counterActions.setInputStr(''))
             dispatch(counterActions.setCurrWordIndex(currWordIndex < WORD_LIST.length - 1 ? currWordIndex + 1 : 0))
         }
-    }, [inputStr, currWordIndex, intervalId, remaningTimeMilis, dispatch, handleTimeIsUp, handleSecondCount, correctChars])
+    }, [inputStr, currWordIndex, intervalId, remaningTimeMilis, dispatch, handleTimeIsUp, handleSecondCount, correctChars, WORD_LIST])
 
     return (
         <div className="App centered">
