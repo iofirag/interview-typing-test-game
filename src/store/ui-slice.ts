@@ -1,8 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const initialState = {
+    isModalOpen: false,
+    isInputAvailable: true,
+}
+
 export const uiSlice = createSlice({
   name: 'ui',
-  initialState: { isModalOpen: false, isInputAvailable: true },
+  initialState,
   reducers: {
     setIsModalOpen(state, action) {
         state.isModalOpen = action.payload

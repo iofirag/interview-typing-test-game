@@ -13,7 +13,7 @@ export default function Statistics(props: Props) {
     return (
         <div className={classes.wrapper}>
             <div className={classes.item}>Correct CPM: {props.correctCpm}</div>
-            <div className={classes.item}>Correct WPM: {props.correctWpm}</div>
+            <div className={classes.item}>Error WPM: {props.correctWpm}</div>
             <div className={`${classes.item} ${props.timeLeft < props.lastSeconds && classes.lastSeconds}`}>
                 Time left: {props.timeLeft > props.lastSeconds ? Math.round(props.timeLeft) : props.timeLeft.toFixed(1)}
             </div>

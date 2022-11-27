@@ -7,28 +7,22 @@ import config from '../data/config.json'
 import MyPopup from '../components/Popup/MyPopup';
 import { useDispatch, useSelector } from 'react-redux';
 import { uiActions } from '../store/ui-slice'
+import { counterActions } from '../store/counter-slice';
 import './App.css';
 
 function App() {
     const dispatch = useDispatch();
-    const isModalOpen = useSelector((state: any) => state.ui.isModalOpen);
-    const isInputAvailable = useSelector((state: any) => state.ui.isInputAvailable);
-
-    const [errorIndexSet, setErrorIndexSet] = React.useState<Set<number>>(new Set())
-    const [currWordIndex, setCurrWordIndex] = React.useState<number>(0)
-    const [correctChars, setCorrectChars] = React.useState<number>(0)
-    const [inputStr, setInputStr] = React.useState<string>('')
-    const [intervalId, setIntervalId] = React.useState<number>(0)
-    const [remaningTimeMilis, setRemaningTimeMilis] = React.useState<number>(config.gameSeconds * 1000)
+    const { isModalOpen, isInputAvailable } = useSelector((state: any) => state.uiSlice);
+    const { remaningTimeMilis, intervalId, correctChars, inputStr, currWordIndex, errorIndexSet } = useSelector((state: any) => state.counterSlice);
 
     const resetGame = React.useCallback(() => {
         clearInterval(intervalId)
-        setErrorIndexSet(new Set())
-        setCurrWordIndex(0)
-        setCorrectChars(0)
-        setInputStr('')
-        setIntervalId(0)
-        setRemaningTimeMilis(config.gameSeconds * 1000)
+        dispatch(counterActions.clearErrorIndexSet())
+        dispatch(counterActions.setCurrWordIndex(0))
+        dispatch(counterActions.setCorrectChars(0))
+        dispatch(counterActions.setInputStr(''))
+        dispatch(counterActions.setIntervalId(0))
+        dispatch(counterActions.setRemaningTimeMilis(config.gameSeconds * 1000))
         dispatch(uiActions.setIsModalOpen(false))
         dispatch(uiActions.setIsInputAvailable(true))
     }, [intervalId, dispatch])
@@ -38,17 +32,27 @@ function App() {
         d.setSeconds(d.getSeconds() + config.gameSeconds)
         const id: NodeJS.Timeout = setInterval(() => {
             const deltaMilis = d.getTime() - Date.now()
-            setRemaningTimeMilis(deltaMilis > 0 ? deltaMilis : 0)
+            dispatch(counterActions.setRemaningTimeMilis(deltaMilis > 0 ? deltaMilis : 0))
         }, config.intervalMilis)
-        setIntervalId(+id)
+        dispatch(counterActions.setIntervalId(id))
     }, [])
+
+    const handleTimeIsUp = React.useCallback(() => {
+        clearInterval(intervalId)
+        dispatch(uiActions.setIsInputAvailable(false))
+        dispatch(uiActions.setIsModalOpen(true))
+    }, [intervalId, dispatch])
+
+    const handleInputStr = React.useCallback((key: string) => {
+        dispatch(counterActions.setInputStr(key))
+    }, [dispatch])
+
+
 
     React.useEffect(() => {
         if (remaningTimeMilis <= 0) {
             // Time is up
-            clearInterval(intervalId)
-            dispatch(uiActions.setIsInputAvailable(false))
-            dispatch(uiActions.setIsModalOpen(true))
+            handleTimeIsUp()
             return
         }
         if (!intervalId && inputStr) {
@@ -63,14 +67,14 @@ function App() {
                     correctCtr++
                 }
             }
-            setCorrectChars(prevState => prevState + correctCtr)
+            dispatch(counterActions.setCorrectChars(correctChars + correctCtr))
             if (WORD_LIST[currWordIndex] !== inputStr.trim()) {
-                setErrorIndexSet(prevState => new Set([...Array.from(prevState), currWordIndex]))
+                dispatch(counterActions.addToErrorIndexSet(currWordIndex))
             }
-            setInputStr('')
-            setCurrWordIndex(prev => prev < WORD_LIST.length - 1 ? prev + 1 : 0)
+            dispatch(counterActions.setInputStr(''))
+            dispatch(counterActions.setCurrWordIndex(currWordIndex < WORD_LIST.length - 1 ? currWordIndex + 1 : 0))
         }
-    }, [inputStr, currWordIndex, intervalId, remaningTimeMilis, handleSecondCount, dispatch])
+    }, [inputStr, currWordIndex, intervalId, remaningTimeMilis, dispatch, handleTimeIsUp, handleSecondCount, correctChars])
 
     return (
         <div className="App centered">
@@ -85,7 +89,7 @@ function App() {
                     wordList={WORD_LIST}
                     currWordIndex={currWordIndex}
                     userInput={inputStr} />
-                <InputField handleKeyEvent={setInputStr} value={inputStr} disabled={!isInputAvailable} />
+                <InputField handleKeyEvent={handleInputStr} value={inputStr} disabled={!isInputAvailable} />
             </main>
             <footer>Developed By Ofir Aghai</footer>
             <MyPopup isOpen={isModalOpen} onClose={resetGame} correctChars={correctChars} errorWords={errorIndexSet.size} />
